@@ -189,8 +189,8 @@ TFLITE_ATTRIBUTE_WEAK Interpreter::TfLiteDelegatePtr AcquireFlexDelegate() {
   const char* filename_pywrap_tensorflow_internal =
       "_pywrap_tensorflow_internal.so";
 #endif
-  void* lib_tf_internal =
-      SharedLibrary::LoadLibrary(filename_pywrap_tensorflow_internal);
+  void* lib_tf_internal = nullptr;
+//      SharedLibrary::LoadLibrary(filename_pywrap_tensorflow_internal);
 #if defined(_WIN32)
   if (lib_tf_internal == nullptr) {
     lib_tf_internal = SharedLibrary::LoadLibrary(

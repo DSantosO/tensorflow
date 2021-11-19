@@ -58,15 +58,16 @@ set(CMAKE_PREFIX_PATH
   "${TFLITE_SOURCE_DIR}/tools/cmake/modules"
   ${CMAKE_PREFIX_PATH}
 )
+
 include(CMakeDependentOption)
 option(TFLITE_ENABLE_RUY "Enable experimental RUY integration" OFF)
-option(TFLITE_ENABLE_RESOURCE "Enable experimental support for resources" ON)
-option(TFLITE_ENABLE_NNAPI "Enable NNAPI (Android only)." ON)
+option(TFLITE_ENABLE_RESOURCE "Enable experimental support for resources" OFF)
+option(TFLITE_ENABLE_NNAPI "Enable NNAPI (Android only)." OFF)
 cmake_dependent_option(TFLITE_ENABLE_NNAPI_VERBOSE_VALIDATION "Enable NNAPI verbose validation." OFF
-                       "TFLITE_ENABLE_NNAPI" ON)
-option(TFLITE_ENABLE_MMAP "Enable MMAP (unsupported on Windows)" ON)
+                       "TFLITE_ENABLE_NNAPI" OFF)
+option(TFLITE_ENABLE_MMAP "Enable MMAP (unsupported on Windows)" OFF)
 option(TFLITE_ENABLE_GPU "Enable GPU" OFF)
-option(TFLITE_ENABLE_XNNPACK "Enable XNNPACK backend" ON)
+option(TFLITE_ENABLE_XNNPACK "Enable XNNPACK backend" OFF)
 
 option(TFLITE_KERNEL_TEST "Enable tflite kernel unit test" OFF)
 if(TFLITE_KERNEL_TEST AND ${CMAKE_CROSSCOMPILING})
@@ -135,7 +136,7 @@ macro(populate_tf_source_vars RELATIVE_DIR SOURCES_VAR)
   )
 endmacro()
 # Find TensorFlow Lite dependencies.
-find_package(absl REQUIRED)
+#find_package(absl REQUIRED)
 find_package(eigen REQUIRED)
 find_package(farmhash REQUIRED)
 find_package(fft2d REQUIRED)
@@ -433,12 +434,12 @@ target_link_libraries(tensorflow-lite
   PUBLIC
     Eigen3::Eigen
     NEON_2_SSE
-    absl::flags
-    absl::hash
-    absl::status
-    absl::strings
-    absl::synchronization
-    absl::variant
+#    absl::flags
+#    absl::hash
+#    absl::status
+#    absl::strings
+#    absl::synchronization
+#    absl::variant
     farmhash
     fft2d_fftsg2d
     flatbuffers
@@ -459,39 +460,39 @@ target_compile_options(tensorflow-lite
 add_library(tensorflow::tensorflowlite ALIAS tensorflow-lite)
 
 # The kernel tests.
-if(TFLITE_KERNEL_TEST)
-  enable_testing()
-  add_subdirectory(${TFLITE_SOURCE_DIR}/kernels)
-endif()
+#if(TFLITE_KERNEL_TEST)
+#  enable_testing()
+#  add_subdirectory(${TFLITE_SOURCE_DIR}/kernels)
+#endif()
 
 # The benchmark tool.
-add_subdirectory(${TFLITE_SOURCE_DIR}/tools/benchmark)
+#add_subdirectory(${TFLITE_SOURCE_DIR}/tools/benchmark)
 
 # The label_image example.
-add_subdirectory(${TFLITE_SOURCE_DIR}/examples/label_image)
+#add_subdirectory(${TFLITE_SOURCE_DIR}/examples/label_image)
 
 # Python interpreter wrapper.
-add_library(_pywrap_tensorflow_interpreter_wrapper SHARED EXCLUDE_FROM_ALL
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper_pybind11.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/numpy.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_error_reporter.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_utils.cc
-)
+#add_library(_pywrap_tensorflow_interpreter_wrapper SHARED EXCLUDE_FROM_ALL
+#  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper.cc
+#  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper_pybind11.cc
+#  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/numpy.cc
+#  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_error_reporter.cc
+#  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_utils.cc
+#)
 
 # To remove "lib" prefix.
-set_target_properties(_pywrap_tensorflow_interpreter_wrapper PROPERTIES PREFIX "")
+#set_target_properties(_pywrap_tensorflow_interpreter_wrapper PROPERTIES PREFIX "")
 
-target_include_directories(_pywrap_tensorflow_interpreter_wrapper
-  PUBLIC
-    ${TFLITE_INCLUDE_DIRS}
-)
+#target_include_directories(_pywrap_tensorflow_interpreter_wrapper
+#  PUBLIC
+#    ${TFLITE_INCLUDE_DIRS}
+#)
 
-target_link_libraries(_pywrap_tensorflow_interpreter_wrapper
-  tensorflow-lite
-  ${CMAKE_DL_LIBS}
-)
-target_compile_options(_pywrap_tensorflow_interpreter_wrapper
-  PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
-  PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
-)
+#target_link_libraries(_pywrap_tensorflow_interpreter_wrapper
+#  tensorflow-lite
+#  ${CMAKE_DL_LIBS}
+#)
+#target_compile_options(_pywrap_tensorflow_interpreter_wrapper
+#  PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
+#  PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
+#)
