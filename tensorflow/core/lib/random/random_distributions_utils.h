@@ -75,7 +75,8 @@ void BoxMullerFloat(uint32_t x0, uint32_t x1, float* f0, float* f1) {
   if (u1 < epsilon) {
     u1 = epsilon;
   }
-  const float v1 = 2.0f * M_PI * Uint32ToFloat(x1);
+  const float PI = 3.14159265358979323;
+  const float v1 = 2.0f * PI * Uint32ToFloat(x1);
   const float u2 = sqrt(-2.0f * log(u1));
 #if !defined(__linux__)
   *f0 = sin(v1);
